@@ -2,9 +2,9 @@
 title: Xsunake's Blog
 SEOTitle: Xsunake's Blog | Xsunake Blog
 email: xsunake@outlook.com
-description: "Every failure is leading towards success."
-keyword: "BY, BY Blog, 柏荧的博客, qiubaiying, 邱柏荧, iOS, Apple, iPhone"
-url: "http://qiubaiying.github.io"          # your host, for absolute URL
+description: "今天开始自律"
+keyword: "Xsunake's Blog,Xsunake的博客,galgame,视觉小说，美少女游戏"
+url: "https://xsunake.github.io/"          # your host, for absolute URL
 baseurl: ""      # for example, '/blog' if your blog hosted on 'host/blog'
 github_repo: "https://github.com/qiubaiying/qiubaiying.github.io.git" # you code repository
 
