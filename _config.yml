@@ -61,11 +61,11 @@ kramdown:
 # Gitalk
 gitalk:
   enable: true    #是否开启Gitalk评论
-  clientID: f2c84e7629bb1446c1a4                            #生成的clientID
-  clientSecret: ca6d6139d1e1b8c43f8b2e19492ddcac8b322d0d    #生成的clientSecret
+  clientID: 665bce47dcf40536e1dd                            #生成的clientID
+  clientSecret: e10606b9b81deec298eb36debd9f104445ce035c    #生成的clientSecret
   repo: xsunake.github.io    #仓库名称
   owner: Xsunake    #github用户名
-  admin: qiubaiying
+  admin: Xsunake
   distractionFreeMode: true #是否启用类似FB的阴影遮罩
 
 
