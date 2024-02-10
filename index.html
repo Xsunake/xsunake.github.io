@@ -3,6 +3,20 @@ layout: page
 description: "今天开始自律"
 ---
 
+<!doctype html>
+<html>
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-FL5GF7JTR1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-FL5GF7JTR1');
+</script>
+</head>
+<body>
 {% for post in paginator.posts %}
 <div class="post-preview">
     <a href="{{ post.url | prepend: site.baseurl }}">
@@ -40,3 +54,5 @@ description: "今天开始自律"
     {% endif %}
 </ul>
 {% endif %}
+</body>
+</html>
