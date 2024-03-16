@@ -1,7 +1,7 @@
 # Site settings
 title: Xsunake's Blog
 SEOTitle: Xsunake's Blog | Xsunake Blog
-header-img: img/post-xs-rwd.jpg  	#显示在首页的背景图片
+header-img: https://sm.ms/image/vfeH9qgdQtFiljK 	#显示在首页的背景图片
 email: xsunake@outlook.com
 description: "今天开始自律"
 keyword: "Xsunake's Blog，Xsunake的博客，galgame，视觉小说，美少女游戏"
@@ -12,7 +12,7 @@ github_repo: "https://github.com/Xsunake/xsunake.github.io.git" # you code repos
 # Sidebar settings
 sidebar: true                           # whether or not using Sidebar.
 sidebar-about-description: "谷風天音最高"
-sidebar-avatar: /img/about-xsunake-1.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
+sidebar-avatar:  https://sm.ms/image/bJwH2MArCOU5TL8     # use absolute URL, seeing it's used in both `/` and `/about/`
 
 
 
@@ -101,8 +101,5 @@ friends: [
     {
         title: "XS",
         href: "http://xsunake.eu.org"
-    },{
-        title: "简书·Xsunake",
-        href: "https://www.jianshu.com/u/1099a89664ed"
     }
 ]
