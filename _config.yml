@@ -12,7 +12,7 @@ github_repo: "https://github.com/Xsunake/xsunake.github.io.git" # you code repos
 # Sidebar settings
 sidebar: true                           # whether or not using Sidebar.
 sidebar-about-description: "谷風天音最高"
-sidebar-avatar:  img/about-xsunake-1.jpg     # use absolute URL, seeing it's used in both `/` and `/about/`
+sidebar-avatar: /img/about-xsunake-1.jpg     # use absolute URL, seeing it's used in both `/` and `/about/`
 
 
 
