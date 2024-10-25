@@ -1,2 +1,1 @@
-# xsunake.github.io
-This is Xsunake's Blog
+# Xsunake's Blog
