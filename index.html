@@ -106,6 +106,79 @@
             #article-view { padding: 20px; margin-top: 100px; width: 95%; }
             .footer-content { text-align: center; }
         }
+
+
+        /* =========================================
+           ✨ 链接与表格美化补丁
+           ========================================= */
+
+        /* 1. 全局链接美化：去除默认蓝色，使用主题色 */
+        a {
+            color: var(--accent); /* 使用樱花粉/霓虹粉 */
+            text-decoration: none;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+        
+        a:hover {
+            color: var(--accent-hover);
+        }
+
+        /* 2. 文章内链接特别样式 (加虚线下划线) */
+        .markdown-body a {
+            font-weight: 600;
+            border-bottom: 2px dashed rgba(255, 133, 162, 0.4); /* 半透明虚线 */
+            padding-bottom: 2px;
+        }
+        
+        .markdown-body a:hover {
+            border-bottom-style: solid; /* 悬停变实线 */
+            background: rgba(255, 133, 162, 0.1); /* 微微的背景高亮 */
+        }
+
+        /* 3. 表格美化 (自动适配暗黑模式) */
+        .markdown-body table {
+            width: 100%;
+            max-width: 100%;
+            margin: 20px 0;
+            border-collapse: separate; 
+            border-spacing: 0;
+            border: var(--border); /* 使用主题边框 */
+            border-radius: 12px; /* 圆角表格 */
+            overflow: hidden; /* 隐藏圆角溢出 */
+            display: block; /* 手机端支持横向滚动 */
+            overflow-x: auto;
+        }
+
+        .markdown-body th, 
+        .markdown-body td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        /* 表头样式 */
+        .markdown-body th {
+            background-color: rgba(127, 127, 127, 0.05); /* 浅灰色背景 */
+            font-weight: 700;
+            color: var(--accent); /* 表头文字用主题色 */
+            border-bottom: 2px solid rgba(0,0,0,0.05);
+        }
+
+        /* 暗黑模式下的表格边框微调 */
+        [data-theme="dark"] .markdown-body th,
+        [data-theme="dark"] .markdown-body td {
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        /* 隔行变色 (斑马纹) */
+        .markdown-body tr:nth-child(even) {
+            background-color: rgba(127, 127, 127, 0.02);
+        }
+        
+        .markdown-body tr:hover {
+            background-color: rgba(127, 127, 127, 0.05); /* 鼠标悬停高亮行 */
+        }
     </style>
 </head>
 <body>
