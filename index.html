@@ -222,6 +222,7 @@
 
         const posts = [
             {
+                id:2
                 title: "资源查找与管理方法",
                 desc: "今天是0721日，距离上篇文章已经4个月了，终于赶在这个特殊的日子把这篇文章写出来，上一篇主要聊GALGAME，提到了一些资源方面的问题，在GAL圈资源的查找还是非常重要的，这一篇将对这一方面进行更加深入的讲解。",
                 file: "2024-07-21-资源查找与管理方法.md", 
@@ -230,6 +231,7 @@
                 cover: "https://p.inari.site/guest/25-12/15/693eeff15bbef.png"
             },
             {
+                id:1
                 title: "献给GAL新手的一封情书",
                 desc: "如何搭配出既可爱又不刺眼的网站配色？分享一些我的心得。",
                 file: "2024-04-20-GALGAME新手入门指南.md",
@@ -238,6 +240,146 @@
                 cover: "https://p.inari.site/guest/25-12/15/693ef0ba61cc0.jpg"
             }
         ];
+
+        
+        // 文章单独网址方案(Gemini)
+        // ==========================================
+        // 核心逻辑修改版 (支持路由 + 排序)
+        // ==========================================
+
+        // 0. 按日期排序 (从新到旧)
+        posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        // 变量定义
+        const grid = document.getElementById('postGrid');
+        const tagContainer = document.getElementById('tagFilters');
+        const homeView = document.getElementById('home-view');
+        const articleView = document.getElementById('article-view');
+        const contentDiv = document.getElementById('markdown-content');
+
+        // 1. 路由控制系统 (Router)
+        function handleHashChange() {
+            const hash = window.location.hash; // 获取 # 后面的内容
+            
+            // 如果网址是 #/posts/xxx
+            if (hash.startsWith('#/posts/')) {
+                const id = hash.split('/')[2]; // 提取 ID
+                const post = posts.find(p => p.id == id); // 查找对应文章
+                if (post) {
+                    renderPostPage(post); // 渲染文章
+                } else {
+                    window.location.hash = ''; // 没找到就回首页
+                }
+            } else {
+                // 其他情况显示首页
+                renderHomePage();
+            }
+        }
+
+        // 监听路由变化 (前进/后退/点击链接)
+        window.addEventListener('hashchange', handleHashChange);
+        window.addEventListener('load', handleHashChange);
+
+        // 2. 渲染首页
+        function renderHomePage() {
+            homeView.style.display = 'block';
+            articleView.classList.remove('active');
+            articleView.style.display = 'none';
+            window.scrollTo(0, 0);
+        }
+
+        // 3. 渲染文章页 (不再直接 fetch，而是被路由调用)
+        async function renderPostPage(post) {
+            homeView.style.display = 'none';
+            articleView.style.display = 'block';
+            contentDiv.innerHTML = '<div style="text-align:center; padding:50px;">☕️ 正在加载文章...</div>';
+            
+            try {
+                // 注意：这里加了 ./ 防止路径错误
+                const response = await fetch(`./posts/${post.file}`); 
+                if (!response.ok) throw new Error("文章未找到");
+                const text = await response.text();
+                contentDiv.innerHTML = marked.parse(text);
+                hljs.highlightAll();
+                setTimeout(() => articleView.classList.add('active'), 10);
+                window.scrollTo(0, 0);
+            } catch (error) {
+                contentDiv.innerHTML = `<h2 style="color:red">加载失败 😭</h2><p>请确保 posts 文件夹下存在 ${post.file}</p>`;
+            }
+        }
+
+        // 4. 返回首页 (修改为清空 Hash)
+        function goHome() {
+            window.location.hash = ''; // 这会自动触发 renderHomePage
+        }
+        // 绑定给 HTML 里的 onclick (需要你去修改 HTML 里的 showHome 调用)
+        window.showHome = goHome; 
+
+        // 5. 渲染网格列表
+        function renderGrid(data) {
+            grid.innerHTML = '';
+            data.forEach(post => {
+                const card = document.createElement('article');
+                card.className = 'card';
+                
+                // 🔥 关键修改：点击不再直接调用函数，而是改变网址 Hash
+                card.onclick = () => {
+                    window.location.hash = `#/posts/${post.id}`;
+                };
+                
+                const tagsHtml = post.tags.map(t => `<span style="color:var(--accent);font-size:0.8rem;margin-right:5px">#${t}</span>`).join('');
+                
+                card.innerHTML = `
+                    <img src="${post.cover}" class="card-img" loading="lazy">
+                    <div class="card-body">
+                        <div style="margin-bottom:8px">${tagsHtml}</div>
+                        <h3 class="card-title">${post.title}</h3>
+                        <p class="card-desc">${post.desc}</p>
+                        <small style="color:var(--text-sub)">📅 ${post.date}</small>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // 6. 标签筛选逻辑
+        const allTags = new Set();
+        posts.forEach(p => p.tags.forEach(t => allTags.add(t)));
+        allTags.forEach(tag => {
+            const btn = document.createElement('button');
+            btn.className = 'tag-btn';
+            btn.innerText = tag;
+            btn.onclick = (e) => {
+                document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                if(tag === 'all') renderGrid(posts);
+                else renderGrid(posts.filter(p => p.tags.includes(tag)));
+            };
+            tagContainer.appendChild(btn);
+        });
+
+        // 初始化显示列表
+        renderGrid(posts);
+
+        // 暗黑模式逻辑 (保持不变)
+        const themeBtn = document.getElementById('themeBtn');
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            themeBtn.innerText = '☀️';
+        }
+        window.toggleTheme = function() { // 挂载到 window 以便 HTML 调用
+            const current = document.documentElement.getAttribute('data-theme');
+            if (current === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+                themeBtn.innerText = '🌙';
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+                themeBtn.innerText = '☀️';
+            }
+        }
 
         const themeBtn = document.getElementById('themeBtn');
         const savedTheme = localStorage.getItem('theme');
@@ -262,29 +404,8 @@
         const articleView = document.getElementById('article-view');
         const contentDiv = document.getElementById('markdown-content');
 
-        function showHome() {
-            homeView.style.display = 'block';
-            articleView.classList.remove('active');
-            articleView.style.display = 'none';
-            window.scrollTo(0, 0);
-        }
 
-        async function loadPost(filename) {
-            homeView.style.display = 'none';
-            articleView.style.display = 'block';
-            contentDiv.innerHTML = '<div style="text-align:center; padding:50px;">☕️ 正在加载文章...</div>';
-            try {
-                const response = await fetch(`posts/${filename}`);
-                if (!response.ok) throw new Error("文章未找到");
-                const text = await response.text();
-                contentDiv.innerHTML = marked.parse(text);
-                hljs.highlightAll();
-                setTimeout(() => articleView.classList.add('active'), 10);
-                window.scrollTo(0, 0);
-            } catch (error) {
-                contentDiv.innerHTML = `<h2 style="color:red">加载失败 😭</h2><p>请确保 posts 文件夹下存在 ${filename}</p>`;
-            }
-        }
+        
 
         const grid = document.getElementById('postGrid');
         const tagContainer = document.getElementById('tagFilters');
@@ -298,25 +419,6 @@
             tagContainer.appendChild(btn);
         });
 
-        function renderGrid(data) {
-            grid.innerHTML = '';
-            data.forEach(post => {
-                const card = document.createElement('article');
-                card.className = 'card';
-                card.onclick = () => loadPost(post.file);
-                const tagsHtml = post.tags.map(t => `<span style="color:var(--accent);font-size:0.8rem;margin-right:5px">#${t}</span>`).join('');
-                card.innerHTML = `
-                    <img src="${post.cover}" class="card-img" loading="lazy">
-                    <div class="card-body">
-                        <div style="margin-bottom:8px">${tagsHtml}</div>
-                        <h3 class="card-title">${post.title}</h3>
-                        <p class="card-desc">${post.desc}</p>
-                        <small style="color:var(--text-sub)">📅 ${post.date}</small>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-        }
 
         function filterPosts(tag) {
             document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
