@@ -179,6 +179,33 @@
         .markdown-body tr:hover {
             background-color: rgba(127, 127, 127, 0.05); /* 鼠标悬停高亮行 */
         }
+
+        /* =========================================
+           📱 移动端代码换行修复 (防止长路径撑破页面)
+           ========================================= */
+
+        /* 1. 针对行内代码 (即文字中间的 `code`) */
+        .markdown-body code {
+            /* 强制在任何字符间都可以换行，专门解决长路径/长URL不换行的问题 */
+            word-break: break-all; 
+            white-space: pre-wrap; /* 保留空格，但允许自动换行 */
+            max-width: 100%;       /* 确保不超过屏幕宽度 */
+            display: inline-block; /* 保持行内块级特性，接受宽度限制 */
+            vertical-align: middle; /* 对齐微调 */
+        }
+
+        /* 2. 针对代码块 (即 ```code``` 包裹的大段代码) */
+        .markdown-body pre {
+            max-width: 100%;       /* 限制最大宽度为父容器宽度 */
+            overflow-x: auto;      /* 如果内容太长，显示内部横向滚动条，而不是撑开整个页面 */
+            white-space: pre;      /* 代码块内部保持不换行（可选，如果你想代码块也换行，改成 pre-wrap） */
+        }
+        
+        /* 3. 全局安全锁：防止任何元素撑开页面宽度 */
+        body, html {
+            overflow-x: hidden;    /* 彻底禁止水平方向的页面级滚动 */
+            width: 100%;
+                }
     </style>
 </head>
 <body>
@@ -410,4 +437,5 @@
 
     </script>
 </body>
+
 </html>
