@@ -180,45 +180,32 @@
             background-color: rgba(127, 127, 127, 0.05); /* 鼠标悬停高亮行 */
         }
 
+        /* =========================================
+           📱 移动端代码换行修复 (防止长路径撑破页面)
+           ========================================= */
 
-        /* ================= 404 页面样式 ================= */
-        #not-found-view {
-            display: none; /* 默认隐藏 */
-            text-align: center;
-            padding: 80px 20px;
-            flex: 1;
-            animation: fadeIn 0.5s ease;
+        /* 1. 针对行内代码 (即文字中间的 `code`) */
+        .markdown-body code {
+            /* 强制在任何字符间都可以换行，专门解决长路径/长URL不换行的问题 */
+            word-break: break-all; 
+            white-space: pre-wrap; /* 保留空格，但允许自动换行 */
+            max-width: 100%;       /* 确保不超过屏幕宽度 */
+            display: inline-block; /* 保持行内块级特性，接受宽度限制 */
+            vertical-align: middle; /* 对齐微调 */
         }
 
-        .wa-image {
-            max-width: 100%;
-            width: 320px; /* 图片宽度控制 */
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-            margin-bottom: 30px;
-        }
-
-        .wa-title {
-            font-size: 4rem; /* 巨大的 404 */
-            font-weight: 900;
-            line-height: 1;
-            margin: 0;
-            /* 给文字加一点二次元的渐变色 */
-            background: linear-gradient(45deg, var(--accent), #a78bfa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .wa-subtitle {
-            font-size: 1rem; /* 较小的文字 */
-            color: var(--text-sub);
-            margin-top: 10px;
-            margin-bottom: 30px;
-            font-weight: 700;
-            letter-spacing: 1px;
+        /* 2. 针对代码块 (即 ```code``` 包裹的大段代码) */
+        .markdown-body pre {
+            max-width: 100%;       /* 限制最大宽度为父容器宽度 */
+            overflow-x: auto;      /* 如果内容太长，显示内部横向滚动条，而不是撑开整个页面 */
+            white-space: pre;      /* 代码块内部保持不换行（可选，如果你想代码块也换行，改成 pre-wrap） */
         }
         
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        /* 3. 全局安全锁：防止任何元素撑开页面宽度 */
+        body, html {
+            overflow-x: hidden;    /* 彻底禁止水平方向的页面级滚动 */
+            width: 100%;
+                }
     </style>
 </head>
 <body>
@@ -276,16 +263,6 @@
             <br>
             <a href="https://icp.gov.moe/?keyword=20248024" target="_blank">萌ICP备20248024号</a>
         </div>
-
-        <div id="not-found-view">
-        <img src="https://p.inari.site/guest/25-12/21/69477f8134320.png" class="wa-image" alt="White Album">
-        
-        <h1 class="wa-title">404</h1>
-        <p class="wa-subtitle">又到了WHITE ALBUM的季节</p>
-        
-        <button class="tag-btn active" onclick="goHome()">返回首页</button>
-    </div>
-
     </footer>
 
     <script>
@@ -322,7 +299,6 @@
         const homeView = document.getElementById('home-view');
         const articleView = document.getElementById('article-view');
         const contentDiv = document.getElementById('markdown-content');
-        const notFoundView = document.getElementById('not-found-view');
         const themeBtn = document.getElementById('themeBtn');
 
         // ==========================================
@@ -331,37 +307,25 @@
         function handleHashChange() {
             const hash = window.location.hash; // 获取网址 # 后的内容
             
-            // 🔥 重置所有视图为隐藏
-            homeView.style.display = 'none';
-            articleView.style.display = 'none';
-            notFoundView.style.display = 'none';
-            articleView.classList.remove('active');
-
-            // 模式匹配
+            // 模式匹配：是否以 #/posts/ 开头
             if (hash.startsWith('#/posts/')) {
-                // --- 文章页逻辑 ---
-                const id = hash.split('/')[2]; 
+                const id = hash.split('/')[2]; // 提取 ID
                 const post = posts.find(p => p.id == id);
                 if (post) {
                     renderPostPage(post);
                 } else {
-                    // ID 不存在，显示 404
-                    render404Page();
+                    // ID 不存在，回首页
+                    goHome();
                 }
-            } else if (hash === '#/404') {
-                // --- 404 页逻辑 ---
-                render404Page();
             } else {
-                // --- 首页逻辑 (空 hash 或其他情况) ---
+                // 其他情况（空 hash 或错误的 hash）都显示首页
                 renderHomePage();
             }
         }
 
         function goHome() {
-            window.location.hash = ''; // 清空 Hash，会自动触发 renderHomePage
+            window.location.hash = ''; // 清空 Hash，会自动触发 handleHashChange
         }
-        // 将 goHome 挂载到 window 对象，确保 HTML 中的 onclick 可以调用
-        window.goHome = goHome;
 
         // ==========================================
         // 3. 页面渲染逻辑
@@ -370,17 +334,14 @@
         // 显示首页
         function renderHomePage() {
             homeView.style.display = 'block';
-            window.scrollTo(0, 0);
-        }
-
-        // 显示 404 页
-        function render404Page() {
-            notFoundView.style.display = 'block';
+            articleView.classList.remove('active');
+            articleView.style.display = 'none';
             window.scrollTo(0, 0);
         }
 
         // 显示文章页
         async function renderPostPage(post) {
+            homeView.style.display = 'none';
             articleView.style.display = 'block';
             contentDiv.innerHTML = '<div style="text-align:center; padding:50px;">☕️ 正在加载文章...</div>';
             
@@ -394,8 +355,7 @@
                 setTimeout(() => articleView.classList.add('active'), 10);
                 window.scrollTo(0, 0);
             } catch (error) {
-                // 🔥 如果文件读取失败（比如文件名写错了），也跳转 404
-                render404Page();
+                contentDiv.innerHTML = `<h2 style="color:red">加载失败 😭</h2><p>请确保 posts 文件夹下存在 <strong>${post.file}</strong></p>`;
             }
         }
 
@@ -464,8 +424,6 @@
                 themeBtn.innerText = '☀️';
             }
         }
-        // 挂载到 window
-        window.toggleTheme = toggleTheme;
 
         // ==========================================
         // 5. 初始化
@@ -479,4 +437,5 @@
 
     </script>
 </body>
+
 </html>
