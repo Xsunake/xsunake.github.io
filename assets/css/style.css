@@ -1,0 +1,114 @@
+/* 完整提取原有 CSS */
+:root {
+    --bg-color: #fff9fb;
+    --card-bg: rgba(255, 255, 255, 0.85);
+    --text-main: #5d4037;
+    --text-sub: #9e8178;
+    --accent: #ff85a2;
+    --accent-hover: #ff5c8d;
+    --nav-bg: rgba(255, 255, 255, 0.6);
+    --shadow: 0 8px 32px rgba(255, 133, 162, 0.15);
+    --border: 2px solid #ffe4e9;
+}
+
+[data-theme="dark"] {
+    --bg-color: #232136;
+    --card-bg: rgba(42, 39, 63, 0.85);
+    --text-main: #e0def4;
+    --text-sub: #908caa;
+    --accent: #eb6f92;
+    --accent-hover: #f6c177;
+    --nav-bg: rgba(35, 33, 54, 0.6);
+    --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    --border: 2px solid #44415a;
+}
+
+* { box-sizing: border-box; transition: background-color 0.3s, color 0.3s, border-color 0.3s; }
+body {
+    margin: 0;
+    font-family: 'Nunito', -apple-system, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    line-height: 1.7;
+    background-image: radial-gradient(var(--accent) 1px, transparent 1px);
+    background-size: 40px 40px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* 导航栏 */
+nav {
+    position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+    width: 90%; max-width: 1000px;
+    background: var(--nav-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    padding: 15px 30px; border-radius: 50px; border: var(--border);
+    display: flex; justify-content: space-between; align-items: center; z-index: 100;
+    box-shadow: var(--shadow);
+}
+.logo { font-weight: 800; font-size: 1.4rem; color: var(--accent); text-decoration: none; letter-spacing: -1px; }
+.theme-toggle { background: none; border: none; cursor: pointer; font-size: 1.5rem; color: var(--text-main); transition: transform 0.5s; }
+.theme-toggle:hover { transform: rotate(45deg) scale(1.1); }
+
+/* 内容区 */
+.hero { text-align: center; padding: 160px 20px 60px; }
+.hero h1 { font-size: 3rem; margin-bottom: 10px; background: linear-gradient(45deg, var(--accent), #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; }
+.hero p { color: var(--text-sub); font-size: 1.1rem; }
+
+.container { max-width: 1000px; margin: 0 auto; padding: 0 20px 40px; flex: 1; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; }
+
+.card { background: var(--card-bg); border-radius: 24px; overflow: hidden; border: var(--border); cursor: pointer; position: relative; box-shadow: var(--shadow); transition: transform 0.3s; }
+.card:hover { transform: translateY(-10px) scale(1.02); }
+.card-img { height: 200px; width: 100%; object-fit: cover; }
+.card-body { padding: 25px; }
+.card-title { font-size: 1.3rem; margin-bottom: 10px; font-weight: 800; color: var(--text-main); }
+.card-desc { font-size: 0.95rem; color: var(--text-sub); margin-bottom: 20px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+/* 文章详情页 - 适配 Jekyll 布局 */
+#article-view {
+    background: var(--card-bg);
+    max-width: 900px;
+    margin: 120px auto 50px;
+    padding: 40px 50px;
+    border-radius: 30px;
+    box-shadow: var(--shadow);
+    border: var(--border);
+    min-height: 60vh;
+}
+
+.markdown-body img { max-width: 100%; border-radius: 12px; margin: 20px 0; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+.markdown-body h1, .markdown-body h2 { color: var(--text-main); border-bottom: 2px dashed var(--accent); padding-bottom: 10px; margin-top: 30px; }
+.markdown-body p { color: var(--text-main); line-height: 1.8; margin-bottom: 16px; font-size: 1.05rem; }
+.markdown-body code { background: rgba(127,127,127,0.1); padding: 2px 6px; border-radius: 6px; color: var(--accent); }
+.markdown-body pre { background: #282c34 !important; border-radius: 12px; padding: 20px; overflow-x: auto; }
+.back-btn { display: inline-block; margin-bottom: 20px; color: var(--accent); cursor: pointer; font-weight: 800; text-decoration: underline; }
+
+/* 页脚样式 */
+footer { background: var(--card-bg); border-top: var(--border); padding: 50px 20px; margin-top: 60px; }
+.footer-content { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; }
+.footer-section h3 { font-size: 1.1rem; color: var(--text-main); margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+.footer-links a { display: block; color: var(--text-sub); text-decoration: none; margin-bottom: 10px; font-size: 0.95rem; transition: all 0.2s; }
+.footer-links a:hover { color: var(--accent); padding-left: 8px; }
+.copyright { text-align: center; margin-top: 40px; padding-top: 20px; border-top: 2px dashed rgba(0,0,0,0.05); color: var(--text-sub); font-size: 0.85rem; }
+.copyright a { color: inherit; text-decoration: none; margin-top: 8px; display: inline-block; border-bottom: 1px dashed transparent; transition: all 0.3s; }
+.copyright a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+/* 链接与表格美化补丁 */
+a { color: var(--accent); text-decoration: none; transition: all 0.2s ease; position: relative; }
+a:hover { color: var(--accent-hover); }
+.markdown-body a { font-weight: 600; border-bottom: 2px dashed rgba(255, 133, 162, 0.4); padding-bottom: 2px; }
+.markdown-body a:hover { border-bottom-style: solid; background: rgba(255, 133, 162, 0.1); }
+.markdown-body table { width: 100%; max-width: 100%; margin: 20px 0; border-collapse: separate; border-spacing: 0; border: var(--border); border-radius: 12px; overflow: hidden; display: block; overflow-x: auto; }
+.markdown-body th, .markdown-body td { padding: 12px 15px; text-align: left; border-bottom: 1px solid rgba(0,0,0,0.05); }
+.markdown-body th { background-color: rgba(127, 127, 127, 0.05); font-weight: 700; color: var(--accent); border-bottom: 2px solid rgba(0,0,0,0.05); }
+[data-theme="dark"] .markdown-body th, [data-theme="dark"] .markdown-body td { border-bottom: 1px solid rgba(255,255,255,0.05); }
+.markdown-body tr:nth-child(even) { background-color: rgba(127, 127, 127, 0.02); }
+.markdown-body tr:hover { background-color: rgba(127, 127, 127, 0.05); }
+
+@media (max-width: 768px) {
+    .grid { grid-template-columns: 1fr; }
+    #article-view { padding: 20px; margin-top: 100px; width: 95%; }
+    .footer-content { text-align: center; }
+}
+```

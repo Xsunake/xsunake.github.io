@@ -1,0 +1,7 @@
+title: Xsunake's Blog
+description: 今天开始自律
+baseurl: ""
+url: "https://xsunake.github.io"
+theme: jekyll-theme-primer # 这是一个占位符，实际上我们将使用自定义 CSS，这行可以防止 GitHub 报错
+markdown: kramdown
+permalink: /posts/:title.html

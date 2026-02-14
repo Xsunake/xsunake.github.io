@@ -1,0 +1,33 @@
+---
+layout: default
+---
+
+<div id="home-view">
+    <header class="hero">
+        <h1>{{ site.title }}</h1>
+        <p>{{ site.description }}</p>
+    </header>
+
+    <!-- 标签筛选功能在纯静态 Jekyll 中较难实现动态筛选，此处展示所有文章 -->
+    <!-- 若需筛选需配合 JS，此处简化为展示列表 -->
+    
+    <main class="container">
+        <div class="grid">
+            {% for post in site.posts %}
+            <article class="card" onclick="window.location.href='{{ post.url | relative_url }}'">
+                <img src="{{ post.cover }}" class="card-img" loading="lazy" alt="{{ post.title }}">
+                <div class="card-body">
+                    <div style="margin-bottom:8px">
+                        {% for tag in post.tags %}
+                        <span style="color:var(--accent);font-size:0.8rem;margin-right:5px">#{{ tag }}</span>
+                        {% endfor %}
+                    </div>
+                    <h3 class="card-title">{{ post.title }}</h3>
+                    <p class="card-desc">{{ post.excerpt | strip_html | truncate: 50 }}</p>
+                    <small style="color:var(--text-sub)">📅 {{ post.date | date: "%Y-%m-%d" }}</small>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+    </main>
+</div>
