@@ -114,110 +114,131 @@ a:hover { color: var(--accent-hover); }
 ```
 
 /* =========================================
-   文章页悬浮封面 (紧凑圆角模式)
+   文章页圆角卡片封面
    ========================================= */
 
-.post-cover-container {
+.post-cover-card {
     position: relative;
-    /* 移除负边距，使其宽度与正文一致 */
-    margin: 0 0 30px 0; 
-    /* 降低高度，从 400px 减小到 280px-320px */
-    height: 300px;
-    overflow: hidden;
-    border-radius: 16px; /* 适中的圆角 */
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    width: 100%;
+    height: 320px; /* 固定高度，避免过大 */
+    margin: 0 0 40px 0;
+    border-radius: 24px; /* 显式的圆角样式 */
+    overflow: hidden; /* 必须：确保内部图片不超出圆角范围 */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     background-color: #2a273f;
+    /* 强制重置，防止父级样式干扰 */
+    transform: translateZ(0); 
 }
 
 .post-cover-img {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center;
-    /* 删除了 transform 和 transition 以禁用缩放动画 */
+    display: block;
+    /* 移除了任何 transform 相关的 transition */
 }
 
-/* 黑色渐变滤镜：确保白色文字清晰 */
 .post-cover-overlay {
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
     background: linear-gradient(
         to bottom,
-        rgba(0, 0, 0, 0.25) 0%,
-        rgba(0, 0, 0, 0.1) 40%,
-        rgba(0, 0, 0, 0.6) 100%
+        rgba(0, 0, 0, 0.3) 0%,
+        rgba(0, 0, 0, 0.15) 50%,
+        rgba(0, 0, 0, 0.7) 100%
     );
     z-index: 1;
 }
 
-/* 浮动内容容器 */
-.post-cover-content {
+.post-cover-inner {
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
     z-index: 2;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 20px; /* 减小内边距 */
-    color: #ffffff;
+    padding: 25px;
 }
 
-/* 返回按钮缩小 */
-.back-btn-wrapper .back-btn {
+/* 返回按钮 */
+.back-btn {
     display: inline-block;
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    padding: 6px 14px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 7px 15px;
     border-radius: 50px;
-    color: #fff;
-    font-size: 0.8rem; /* 减小字号 */
-    text-decoration: none;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff !important;
+    font-size: 0.85rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
     cursor: pointer;
+    transition: background 0.3s;
 }
 
-.back-btn-wrapper .back-btn:hover {
-    background: var(--accent);
+.back-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
 }
 
-/* 封面标题与元数据缩小 */
-.post-meta-on-cover {
+/* 底部文字信息 */
+.bottom-info {
+    color: #fff;
     text-align: left;
 }
 
-.post-tags {
-    margin-bottom: 6px;
+.cover-tags {
+    margin-bottom: 8px;
 }
 
-.tag-item {
-    font-size: 0.75rem; /* 减小字号 */
-    background: var(--accent);
-    padding: 2px 10px;
-    border-radius: 4px;
-    margin-right: 6px;
-    font-weight: 600;
+.cover-tag-item {
+    font-size: 0.75rem;
+    background: var(--accent, #ff79c6);
+    color: #fff;
+    padding: 3px 12px;
+    border-radius: 6px;
+    margin-right: 8px;
+    font-weight: 700;
 }
 
-.post-title-on-cover {
-    font-size: 1.6rem; /* 从 2.2rem 减小到 1.6rem */
+.cover-title {
+    font-size: 1.8rem;
     font-weight: 800;
-    margin: 6px 0;
+    margin: 8px 0;
     line-height: 1.2;
     color: #fff !important;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
 }
 
-.post-date-on-cover {
-    opacity: 0.8;
-    font-size: 0.85rem;
+.cover-date {
+    font-size: 0.9rem;
+    opacity: 0.85;
+    margin: 0;
 }
 
-/* 移动端适配 */
+/* 无封面时的回退样式 */
+.back-btn-simple {
+    margin-bottom: 20px;
+    cursor: pointer;
+    color: var(--accent);
+}
+
+.post-header-simple {
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+/* 📱 移动端适配 */
 @media (max-width: 768px) {
-    .post-cover-container {
-        height: 220px; /* 移动端更紧凑 */
+    .post-cover-card {
+        height: 240px;
+        border-radius: 16px;
     }
-    .post-title-on-cover {
-        font-size: 1.3rem;
+    .cover-title {
+        font-size: 1.4rem;
+    }
+    .post-cover-inner {
+        padding: 15px;
     }
 }
