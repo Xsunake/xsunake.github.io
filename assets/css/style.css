@@ -114,41 +114,122 @@ a:hover { color: var(--accent-hover); }
 ```
 
 /* =========================================
-   文章页顶部封面 (Cover) 样式
+   文章页悬浮封面
    ========================================= */
 
 .post-cover-container {
-    /* 核心技巧：使用负边距抵消父容器(article-view)的 padding */
-    margin: -40px -50px 40px -50px; 
-    height: 320px; /* 限制封面高度，避免占据太多首屏空间 */
-    overflow: hidden;
-    border-radius: 30px 30px 0 0; /* 仅上方圆角，与卡片完美贴合 */
     position: relative;
-    box-shadow: 0 5px 10px rgba(0,0,0,0.05);
-    background-color: var(--bg-color); /* 图片加载前的占位色 */
+    /* 负边距让封面稍微外扩或持平，这里改为与内边距抵消以实现“卡片内圆角” */
+    margin: -10px -20px 40px -20px; 
+    height: 400px;
+    overflow: hidden;
+    border-radius: 20px; /* 全圆角模式 */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    background-color: #2a273f;
 }
 
 .post-cover-img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* 关键：裁剪图片以填满容器，不变形 */
+    object-fit: cover;
     object-position: center;
-    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    box-shadow: none !important; /* 覆盖 markdown 图片默认阴影 */
-    margin: 0 !important; /* 覆盖 markdown 图片默认边距 */
-    border-radius: 0 !important;
+    transition: transform 0.8s ease;
 }
 
-/* 鼠标悬停时图片微微放大，增加呼吸感 */
-.post-cover-container:hover .post-cover-img {
-    transform: scale(1.03);
+/* 黑色渐变滤镜：确保白色文字清晰 */
+.post-cover-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.3) 0%,
+        rgba(0, 0, 0, 0.2) 40%,
+        rgba(0, 0, 0, 0.7) 100%
+    );
+    z-index: 1;
 }
 
-/* 📱 移动端适配 */
+/* 浮动内容容器 */
+.post-cover-content {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 30px;
+    color: #ffffff; /* 封面上的文字强制白色 */
+}
+
+/* 返回按钮样式优化 */
+.back-btn-wrapper .back-btn {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 8px 16px;
+    border-radius: 50px;
+    color: #fff;
+    font-size: 0.9rem;
+    text-decoration: none;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+}
+
+.back-btn-wrapper .back-btn:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    transform: translateX(-5px);
+}
+
+/* 封面标题与元数据 */
+.post-meta-on-cover {
+    text-align: left;
+}
+
+.post-tags {
+    margin-bottom: 10px;
+}
+
+.tag-item {
+    font-size: 0.85rem;
+    background: var(--accent);
+    padding: 4px 12px;
+    border-radius: 6px;
+    margin-right: 8px;
+    font-weight: 700;
+}
+
+.post-title-on-cover {
+    font-size: 2.2rem;
+    font-weight: 900;
+    margin: 10px 0;
+    line-height: 1.3;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    color: #fff !important; /* 强制白色 */
+}
+
+.post-date-on-cover {
+    opacity: 0.8;
+    font-size: 0.95rem;
+    letter-spacing: 1px;
+}
+
+/* 移动端适配 */
 @media (max-width: 768px) {
     .post-cover-container {
-        /* 移动端 padding 是 20px，所以负边距也要改 */
-        margin: -20px -20px 30px -20px;
-        height: 200px; /* 手机上图片稍微矮一点 */
+        margin: -10px -10px 30px -10px;
+        height: 300px;
     }
+    .post-title-on-cover {
+        font-size: 1.5rem;
+    }
+    .post-cover-content {
+        padding: 20px;
+    }
+}
+
+/* 鼠标悬停封面效果 */
+.post-cover-container:hover .post-cover-img {
+    transform: scale(1.05);
 }
