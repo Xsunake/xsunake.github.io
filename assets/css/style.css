@@ -112,3 +112,43 @@ a:hover { color: var(--accent-hover); }
     .footer-content { text-align: center; }
 }
 ```
+
+/* =========================================
+   文章页顶部封面 (Cover) 样式
+   ========================================= */
+
+.post-cover-container {
+    /* 核心技巧：使用负边距抵消父容器(article-view)的 padding */
+    margin: -40px -50px 40px -50px; 
+    height: 320px; /* 限制封面高度，避免占据太多首屏空间 */
+    overflow: hidden;
+    border-radius: 30px 30px 0 0; /* 仅上方圆角，与卡片完美贴合 */
+    position: relative;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.05);
+    background-color: var(--bg-color); /* 图片加载前的占位色 */
+}
+
+.post-cover-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* 关键：裁剪图片以填满容器，不变形 */
+    object-position: center;
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    box-shadow: none !important; /* 覆盖 markdown 图片默认阴影 */
+    margin: 0 !important; /* 覆盖 markdown 图片默认边距 */
+    border-radius: 0 !important;
+}
+
+/* 鼠标悬停时图片微微放大，增加呼吸感 */
+.post-cover-container:hover .post-cover-img {
+    transform: scale(1.03);
+}
+
+/* 📱 移动端适配 */
+@media (max-width: 768px) {
+    .post-cover-container {
+        /* 移动端 padding 是 20px，所以负边距也要改 */
+        margin: -20px -20px 30px -20px;
+        height: 200px; /* 手机上图片稍微矮一点 */
+    }
+}
