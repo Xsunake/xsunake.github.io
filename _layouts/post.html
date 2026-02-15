@@ -3,6 +3,16 @@ layout: default
 ---
 
 <div id="article-view" class="active" style="display:block;">
+    
+    <!-- 1. 封面图逻辑：只有当 md 文件头有 cover 属性时才显示 -->
+    {% if page.cover %}
+    <div class="post-cover-container">
+        <img src="{{ page.cover }}" alt="{{ page.title }}" class="post-cover-img">
+        <!-- 可选：在图片上加一个返回按钮，或者保持原样 -->
+    </div>
+    {% endif %}
+
+    <!-- 2. 返回按钮 (如果是封面模式，建议放在下面或悬浮，这里保持结构简洁放这里) -->
     <div class="back-btn" onclick="window.location.href='{{ '/' | relative_url }}'">← 返回列表</div>
     
     <header style="margin-bottom: 40px; text-align: center;">
