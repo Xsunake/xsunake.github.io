@@ -4,40 +4,39 @@ layout: default
 
 <div id="article-view" class="active" style="display:block;">
     
-    <!-- 封面区域 -->
     {% if page.cover %}
-    <div class="post-cover-container">
-        <!-- 1. 封面图片 -->
+    <!-- 封面容器 -->
+    <div class="post-cover-card">
         <img src="{{ page.cover }}" alt="{{ page.title }}" class="post-cover-img">
         
-        <!-- 2. 图片上的遮罩层/滤镜 -->
+        <!-- 遮罩层 -->
         <div class="post-cover-overlay"></div>
 
-        <!-- 3. 浮动在图片上的内容 -->
-        <div class="post-cover-content">
-            <div class="back-btn-wrapper">
+        <!-- 浮动内容层 -->
+        <div class="post-cover-inner">
+            <div class="top-bar">
                 <div class="back-btn" onclick="window.location.href='{{ '/' | relative_url }}'">← 返回列表</div>
             </div>
             
-            <div class="post-meta-on-cover">
+            <div class="bottom-info">
                 {% if page.tags %}
-                <div class="post-tags">
+                <div class="cover-tags">
                     {% for tag in page.tags %}
-                    <span class="tag-item"># {{ tag }}</span>
+                    <span class="cover-tag-item"># {{ tag }}</span>
                     {% endfor %}
                 </div>
                 {% endif %}
-                <h1 class="post-title-on-cover">{{ page.title }}</h1>
-                <p class="post-date-on-cover">{{ page.date | date: "%Y-%m-%d" }}</p>
+                <h1 class="cover-title">{{ page.title }}</h1>
+                <p class="cover-date">{{ page.date | date: "%Y-%m-%d" }}</p>
             </div>
         </div>
     </div>
     {% else %}
-    <!-- 如果没有封面，显示普通标题结构 -->
-    <div class="back-btn" onclick="window.location.href='{{ '/' | relative_url }}'">← 返回列表</div>
-    <header style="margin-bottom: 40px; text-align: center;">
+    <!-- 无封面时的默认头部 -->
+    <div class="back-btn-simple" onclick="window.location.href='{{ '/' | relative_url }}'">← 返回列表</div>
+    <header class="post-header-simple">
         <h1>{{ page.title }}</h1>
-        <p style="color:var(--text-sub)">{{ page.date | date: "%Y-%m-%d" }}</p>
+        <p>{{ page.date | date: "%Y-%m-%d" }}</p>
     </header>
     {% endif %}
 
