@@ -120,14 +120,15 @@ a:hover { color: var(--accent-hover); }
 .post-cover-card {
     position: relative;
     width: 100%;
-    height: 320px; /* 固定高度，避免过大 */
-    margin: 0 0 40px 0;
-    border-radius: 24px; /* 显式的圆角样式 */
-    overflow: hidden; /* 必须：确保内部图片不超出圆角范围 */
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    height: 300px; /* 减小高度，避免遮挡过多 */
+    margin: 0 0 30px 0; /* 底部间距，防止覆盖文章 */
+    border-radius: 20px !important; /* 强制圆角 */
+    overflow: hidden !important; /* 强制裁剪内部图片 */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
     background-color: #2a273f;
-    /* 强制重置，防止父级样式干扰 */
-    transform: translateZ(0); 
+    /* 解决部分浏览器圆角失效的黑科技 */
+    isolation: isolate; 
+    -webkit-mask-image: -webkit-radial-gradient(white, black);
 }
 
 .post-cover-img {
@@ -137,108 +138,79 @@ a:hover { color: var(--accent-hover); }
     width: 100%;
     height: 100%;
     object-fit: cover;
-    display: block;
-    /* 移除了任何 transform 相关的 transition */
+    z-index: -1; /* 放在最底层 */
+    border-radius: 20px !important;
 }
 
 .post-cover-overlay {
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
+    /* 滤镜：上方深色保护返回按钮，下方深色保护标题 */
     background: linear-gradient(
         to bottom,
-        rgba(0, 0, 0, 0.3) 0%,
-        rgba(0, 0, 0, 0.15) 50%,
-        rgba(0, 0, 0, 0.7) 100%
+        rgba(0, 0, 0, 0.4) 0%,
+        rgba(0, 0, 0, 0.1) 50%,
+        rgba(0, 0, 0, 0.6) 100%
     );
-    z-index: 1;
+    z-index: 0;
 }
 
 .post-cover-inner {
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    z-index: 2;
+    position: relative;
+    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 25px;
+    padding: 20px;
+    z-index: 1;
+    box-sizing: border-box; /* 确保 padding 不撑开容器 */
 }
 
-/* 返回按钮 */
-.back-btn {
+/* 返回按钮：精简尺寸 */
+.post-cover-inner .back-btn {
     display: inline-block;
     background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    padding: 7px 15px;
-    border-radius: 50px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 5px 12px;
+    border-radius: 12px;
     color: #fff !important;
-    font-size: 0.85rem;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    font-size: 0.8rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
     cursor: pointer;
-    transition: background 0.3s;
+    width: fit-content;
 }
 
-.back-btn:hover {
-    background: rgba(255, 255, 255, 0.3);
-}
-
-/* 底部文字信息 */
-.bottom-info {
-    color: #fff;
-    text-align: left;
-}
-
-.cover-tags {
-    margin-bottom: 8px;
-}
-
-.cover-tag-item {
-    font-size: 0.75rem;
-    background: var(--accent, #ff79c6);
-    color: #fff;
-    padding: 3px 12px;
-    border-radius: 6px;
-    margin-right: 8px;
-    font-weight: 700;
-}
-
+/* 标题信息 */
 .cover-title {
-    font-size: 1.8rem;
+    font-size: 1.5rem !important; /* 显著减小字号，避免太大 */
     font-weight: 800;
-    margin: 8px 0;
-    line-height: 1.2;
+    margin: 5px 0 !important;
     color: #fff !important;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
 }
 
 .cover-date {
-    font-size: 0.9rem;
-    opacity: 0.85;
-    margin: 0;
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.9);
+    margin: 0 !important;
 }
 
-/* 无封面时的回退样式 */
-.back-btn-simple {
-    margin-bottom: 20px;
-    cursor: pointer;
-    color: var(--accent);
+.cover-tag-item {
+    font-size: 0.7rem;
+    background: var(--accent);
+    padding: 2px 8px;
+    border-radius: 5px;
+    margin-right: 5px;
 }
 
-.post-header-simple {
-    margin-bottom: 30px;
-    text-align: center;
-}
-
-/* 📱 移动端适配 */
+/* 📱 移动端适配：进一步缩小防止溢出 */
 @media (max-width: 768px) {
     .post-cover-card {
-        height: 240px;
-        border-radius: 16px;
+        height: 200px;
+        border-radius: 15px !important;
     }
     .cover-title {
-        font-size: 1.4rem;
-    }
-    .post-cover-inner {
-        padding: 15px;
+        font-size: 1.2rem !important;
     }
 }
