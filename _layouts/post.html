@@ -5,7 +5,7 @@ layout: default
 <div id="article-view" class="active" style="display:block;">
     
     {% if page.cover %}
-    <!-- 封面容器 -->
+    <!-- 封面容器：确保它在文档流中，不会遮挡下方内容 -->
     <div class="post-cover-card">
         <img src="{{ page.cover }}" alt="{{ page.title }}" class="post-cover-img">
         
@@ -40,7 +40,7 @@ layout: default
     </header>
     {% endif %}
 
-    <!-- 正文内容 -->
+    <!-- 正文内容：现在它会自动排在封面下方 -->
     <div id="markdown-content" class="markdown-body">
         {{ content }}
     </div>
