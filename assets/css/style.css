@@ -118,99 +118,129 @@ a:hover { color: var(--accent-hover); }
    ========================================= */
 
 .post-cover-card {
+    /* [原因] 建立相对定位上下文，限制内部绝对定位元素（图片、遮罩）的活动范围 */
     position: relative;
-    width: 100%;
-    height: 300px; /* 减小高度，避免遮挡过多 */
-    margin: 0 0 30px 0; /* 底部间距，防止覆盖文章 */
-    border-radius: 20px !important; /* 强制圆角 */
-    overflow: hidden !important; /* 强制裁剪内部图片 */
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    
+    /* [关键改动] 强制宽度为 100%，严格对齐父容器。
+       [风险] 如果父容器有 padding，封面会与其对齐。这是你要求的“与文章宽度相同”。 */
+    width: 100%; 
+    
+    /* [关键改动] 设定固定高度。
+       [原因] 必须给一个明确的物理高度，让浏览器知道这里占用了空间，
+       否则下方的文章内容会自动上移，导致被“蒙住”。 */
+    height: 280px; 
+    
+    /* [原因] 底部留白，物理推开下方的文章内容，防止拥挤 */
+    margin: 0 0 40px 0; 
+    
+    /* [原因] 圆角控制 */
+    border-radius: 16px; 
+    
+    /* [关键改动] 溢出隐藏。
+       [原因] 必须开启，否则内部的直角图片会溢出圆角容器，导致圆角失效。 */
+    overflow: hidden; 
+    
+    /* [视觉优化] 轻微阴影，增加层次感 */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    
+    /* [兼容性] 强制 GPU 渲染，修复部分浏览器（如 Safari）圆角裁剪失效的 Bug */
+    transform: translateZ(0); 
+    
+    /* [背景色] 图片加载失败或加载中的占位色 */
     background-color: #2a273f;
-    /* 解决部分浏览器圆角失效的黑科技 */
-    isolation: isolate; 
-    -webkit-mask-image: -webkit-radial-gradient(white, black);
 }
 
 .post-cover-img {
+    /* [定位] 绝对定位，填满 .post-cover-card */
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    z-index: -1; /* 放在最底层 */
-    border-radius: 20px !important;
+    
+    /* [关键属性] 保持比例裁剪。
+       [风险] 图片会被裁剪以填满容器。如果原图是长图或宽图，部分内容可能不可见。
+       这是为了保证封面形状整齐必须的妥协。 */
+    object-fit: cover; 
+    
+    /* [层级] 放在最底层 */
+    z-index: 1; 
 }
 
 .post-cover-overlay {
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
-    /* 滤镜：上方深色保护返回按钮，下方深色保护标题 */
-    background: linear-gradient(
-        to bottom,
-        rgba(0, 0, 0, 0.4) 0%,
-        rgba(0, 0, 0, 0.1) 50%,
-        rgba(0, 0, 0, 0.6) 100%
-    );
-    z-index: 0;
+    /* [原因] 渐变遮罩，确保白色文字在任何背景下都可见 */
+    background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.6));
+    z-index: 2; /* 在图片之上 */
+    pointer-events: none; /* [交互] 允许鼠标穿透遮罩层（如果未来需要点击图片） */
 }
 
 .post-cover-inner {
-    position: relative;
-    height: 100%;
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 3; /* 在遮罩之上 */
+    padding: 24px; /* 内部间距 */
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    padding: 20px;
-    z-index: 1;
-    box-sizing: border-box; /* 确保 padding 不撑开容器 */
+    justify-content: space-between; /* 顶部按钮，底部标题，两端对齐 */
 }
 
-/* 返回按钮：精简尺寸 */
-.post-cover-inner .back-btn {
+/* --- 以下为内部元素样式微调 --- */
+
+.back-btn {
     display: inline-block;
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    padding: 5px 12px;
-    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    padding: 6px 14px;
+    border-radius: 8px;
     color: #fff !important;
-    font-size: 0.8rem;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-size: 0.85rem;
+    font-weight: 700;
     cursor: pointer;
-    width: fit-content;
+    text-decoration: none;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    /* [限制] 宽度自适应内容，不占满整行 */
+    width: fit-content; 
 }
 
-/* 标题信息 */
 .cover-title {
-    font-size: 1.5rem !important; /* 显著减小字号，避免太大 */
+    font-size: 1.6rem;
     font-weight: 800;
-    margin: 5px 0 !important;
     color: #fff !important;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    margin: 0 0 8px 0;
+    line-height: 1.3;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 
 .cover-date {
-    font-size: 0.85rem;
-    color: rgba(255,255,255,0.9);
-    margin: 0 !important;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0;
 }
 
 .cover-tag-item {
-    font-size: 0.7rem;
+    display: inline-block;
+    font-size: 0.75rem;
     background: var(--accent);
+    color: #fff;
     padding: 2px 8px;
-    border-radius: 5px;
-    margin-right: 5px;
+    border-radius: 4px;
+    margin-right: 6px;
+    margin-bottom: 6px;
 }
 
-/* 📱 移动端适配：进一步缩小防止溢出 */
+/* 📱 移动端适配风险控制 */
 @media (max-width: 768px) {
     .post-cover-card {
-        height: 200px;
-        border-radius: 15px !important;
+        /* [风险] 手机屏幕较小，280px 可能太占空间，缩小到 200px */
+        height: 200px; 
     }
     .cover-title {
-        font-size: 1.2rem !important;
+        font-size: 1.3rem; /* 缩小标题字号防止换行过多 */
+    }
+    .post-cover-inner {
+        padding: 16px; /* 减小内边距 */
     }
 }
