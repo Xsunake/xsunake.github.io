@@ -4,43 +4,22 @@ layout: default
 
 <div id="article-view" class="active" style="display:block;">
     
+    <!-- 1. 封面图逻辑：只有当 md 文件头有 cover 属性时才显示 -->
     {% if page.cover %}
-    <!-- 封面容器：确保它在文档流中，不会遮挡下方内容 -->
-    <div class="post-cover-card">
+    <div class="post-cover-container">
         <img src="{{ page.cover }}" alt="{{ page.title }}" class="post-cover-img">
-        
-        <!-- 遮罩层 -->
-        <div class="post-cover-overlay"></div>
-
-        <!-- 浮动内容层 -->
-        <div class="post-cover-inner">
-            <div class="top-bar">
-                <div class="back-btn" onclick="window.location.href='{{ '/' | relative_url }}'">← 返回列表</div>
-            </div>
-            
-            <div class="bottom-info">
-                {% if page.tags %}
-                <div class="cover-tags">
-                    {% for tag in page.tags %}
-                    <span class="cover-tag-item"># {{ tag }}</span>
-                    {% endfor %}
-                </div>
-                {% endif %}
-                <h1 class="cover-title">{{ page.title }}</h1>
-                <p class="cover-date">{{ page.date | date: "%Y-%m-%d" }}</p>
-            </div>
-        </div>
+        <!-- 可选：在图片上加一个返回按钮，或者保持原样 -->
     </div>
-    {% else %}
-    <!-- 无封面时的默认头部 -->
-    <div class="back-btn-simple" onclick="window.location.href='{{ '/' | relative_url }}'">← 返回列表</div>
-    <header class="post-header-simple">
-        <h1>{{ page.title }}</h1>
-        <p>{{ page.date | date: "%Y-%m-%d" }}</p>
-    </header>
     {% endif %}
 
-    <!-- 正文内容：现在它会自动排在封面下方 -->
+    <!-- 2. 返回按钮 (如果是封面模式，建议放在下面或悬浮，这里保持结构简洁放这里) -->
+    <div class="back-btn" onclick="window.location.href='{{ '/' | relative_url }}'">← 返回列表</div>
+    
+    <header style="margin-bottom: 40px; text-align: center;">
+        <h1>{{ page.title }}</h1>
+        <p style="color:var(--text-sub)">{{ page.date | date: "%Y-%m-%d" }}</p>
+    </header>
+
     <div id="markdown-content" class="markdown-body">
         {{ content }}
     </div>
